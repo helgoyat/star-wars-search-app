@@ -37,7 +37,60 @@ class App extends Component
 
   handleSubmit()
   {
-    console.log(this.state.input);
+    const { input, data } = this.state;
+    const array = input.split(' ');
+
+    // Set array for lenght max is 9
+    // i.e. 9 words max to search
+    // >>>> Due to operation below for calculating relevance
+    // Maximum occurence value would be 9.99999999...
+    const words = array.slice(0, 10);
+
+    for (let item in data)
+    {
+      let relevance = 0;
+      const counts = {};
+
+      words.forEach(word =>
+      {
+        // modifier g for global search
+        // modifier i for case-insensitive
+        const regex = new RegExp(word, 'gi');
+        const count = data[item].opening_crawl.match(regex);
+
+        if (count !== null)
+        {
+          // Add count (of that word occurence)
+          counts[word] = count.length;
+
+          // Calculate relevance value for that word
+          let total = 0;
+          for (let i = 0; i < count.length; ++i)
+          {
+            // https://www.w3schools.com/js/tryit.asp?filename=tryjs_numbers_inaccurate2
+            total = ((total * 10) + (1 * Math.pow(10, -i)) * 10) / 10;
+          }
+
+          // Add word relevance value to total item relevance
+          relevance += total;
+        }
+        else
+        {
+          counts[word] = 0;
+          relevance += 0;
+        }
+      });
+
+      // Add new props to current item object in array
+      data[item].relevance = relevance;
+      data[item].counts = counts;
+
+    }
+
+    // Sort by relevance value
+    data.sort(function (a, b) { return b.relevance - a.relevance });
+    this.setState({ data });
+
   }
 
   render()
@@ -55,7 +108,9 @@ class App extends Component
             (json !== null) ?
               <React.Fragment>
                 {
-                  data.map((e, i) => (<Item key={i} data={e} />))
+                  (data.length > 0) ?
+                    data.map((e, i) => (<Item key={i} data={e} />)) :
+                    <div className="status">No result...</div>
                 }
               </React.Fragment> :
               <div className="status">Loading...</div>
