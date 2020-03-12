@@ -1,2 +1,2 @@
 # Search-App
-API used is found at https://jsonplaceholder.typicode.com/
+Star Wars API used is found at https://swapi.co/
