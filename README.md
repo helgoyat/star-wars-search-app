@@ -1,3 +1,3 @@
 # Search-App
 
-Star Wars API used is found at https://swapi.co/.
+Star Wars API can be found [HERE](https://swapi.co/). (Film resource)
