@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // Components
 import Item from './components/Item';
 // Styles
-import './Styles.css';
+import './assets/Styles.css';
 
 class App extends Component
 {
@@ -99,8 +99,7 @@ class App extends Component
 
     return (
       <div className="content" >
-        <h1 style={{ marginBottom: 0 }}>Star Wars</h1>
-        <h2 style={{ marginTop: 4 }}>Search App</h2>
+        <h1 style={{ marginBottom: 10 }}>Star Wars</h1>
         <div><input onChange={this.handleChange} placeholder="Type your search here..."></input></div>
         <div><button onClick={this.handleSubmit}>Search</button></div>
         <div>

@@ -13,8 +13,8 @@ class Item extends Component
 
         return (
             <div className="item">
-                <div><b>Title:</b> {data.title}</div>
-                <div><b>Director:</b> {data.director}</div>
+                <div>{data.title}</div>
+                <div>Directed by {data.director}</div>
                 <div>{data.opening_crawl}</div>
                 {
                     (data.counts !== undefined) &&

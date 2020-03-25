@@ -1,0 +1,91 @@
+body{
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-image: url(./pictures/moon.jpg);
+  background-attachment: fixed;
+  background-size: cover;
+}
+/* MAIN */
+.content{
+  max-width: 600px;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000b0;
+  padding: 20px;
+}
+.content > div{
+  margin: 10px 0px;
+}
+.status{
+  font-size: 14px;
+  color: #a5a5a5;
+}
+.item{
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #000000;
+  background-color: #121212;
+  color: #564ed2;
+}
+.item > div{
+  margin: 5px 0px;
+}
+.item > div:first-child{
+  color: #FF9800;
+  font-weight: bold;
+  font-size: 24px;
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 2px;
+}
+.item > div:nth-child(2){
+  color: #ffffff;
+}
+.item > div:last-child{
+  font-size: 14px;
+}
+.count{
+  margin-left: 6px;
+  padding: 6px 8px;
+  color: #FF9800;
+  background-color: #242424;
+  border-radius: 1px;
+}
+/* TAGS */
+input{
+  padding: 8px;
+  border: 2px solid #564ed2;
+  background-color: #121212;
+  width: 300px;
+  color: #564ed2;
+}
+input:focus{
+  outline: none;
+  border-color: #fa9500;
+  color: #ffffff;
+}
+button{
+  padding: 8px 14px;
+  background-color: transparent;
+  color: #ff9800;
+  border: 2px solid;
+}
+button:hover{
+  cursor: pointer;
+  background-color: #ff9800;
+  border-color: #ff9800;
+  color: #ffffff;
+}
+button:focus{
+  outline: none;
+}
+/* TITLES */
+h1{
+  font-family: 'Bebas Neue', cursive;
+  color: #ff9800;
+  letter-spacing: 6px;
+  font-size: 50px;
+}
