@@ -2,6 +2,13 @@
 
 Star Wars API can be found [here](https://swapi.co/). (Film resource)
 
+## Concept
+
+Application to operates words search in Star Wars films items, and returns the original list sorted by keywords relevancy.
+
+* Search is limited up to 9 words
+* Relevancy is calculated using concept of binary numbers
+
 ## Screenshots
 
 Below are some screenshots of the interface
