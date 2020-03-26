@@ -10,14 +10,16 @@ class App extends Component
   {
     super();
     this.state = {
-      json: null,
-      list: [],
+      list: null,
       input: '',
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  /**
+   * Get data from API when page loads
+   */
   async componentDidMount()
   {
     // Load film samples from Star Wars API
@@ -25,19 +27,29 @@ class App extends Component
     if (res.ok)
     {
       const json = await res.json();
-      this.setState({ json: json.results, list: json.results });
+      this.setState({ list: json.results });
     }
   }
 
+  /**
+   * Input value change
+   * @param {obj} event 
+   */
   handleChange(event)
   {
     const { value } = event.target;
     this.setState({ input: value.trim() });
   }
 
+  /**
+   * Search for most relevant list items
+   */
   handleSubmit()
   {
     const { input, list } = this.state;
+
+
+
     const array = input.split(' ');
 
     // Set array for lenght max is 9
@@ -95,7 +107,7 @@ class App extends Component
 
   render()
   {
-    const { json, list } = this.state;
+    const { list } = this.state;
 
     return (
       <div className="content">
@@ -110,7 +122,7 @@ class App extends Component
         <div><button onClick={this.handleSubmit}>Search</button></div>
         <div>
           {
-            (json !== null) ?
+            (list !== null) ?
               <React.Fragment>
                 {
                   list.map((e, i) => (<Item key={i} data={e} />))
