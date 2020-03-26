@@ -14,6 +14,7 @@ class App extends Component
       input: '',
     }
     this.validate = this.validate.bind(this);
+    this.addWord = this.addWord.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -44,6 +45,17 @@ class App extends Component
       return true;
     }
     return false;
+  }
+
+  /**
+   * Add default word suggestion to input
+   * @param {string} word 
+   */
+  addWord(word)
+  {
+    const { input } = this.state;
+    const newInput = (input.length > 0) ? input + " " + word : word;
+    this.setState({ input: newInput });
   }
 
   /**
@@ -90,15 +102,37 @@ class App extends Component
 
           if (count !== null)
           {
-            // Add count (of that word occurence)
-            counts[word] = count.length;
+            const occurrence = count.length;
+            counts[word] = occurrence;
 
-            // Calculate relevance value for that word
+            // Calculate word relevance value
+
+            // PREVIOUS METHOD
+            // let total = 0;
+            // for (let i = 0; i < occurrence; ++i)
+            // {
+            //   // https://www.w3schools.com/js/tryit.asp?filename=tryjs_numbers_inaccurate2
+            //   total += (1 * Math.pow(10, -i) * 10) / 10;
+            // }
+
             let total = 0;
-            for (let i = 0; i < count.length; ++i)
+
+            // Maximum number of occurrence is 8 for a word
+            // let occur = (occurrence > 8) ? 7 : occurrence;
+
+            // 1 byte (8 bits) number calculation
+
+            for (let i = 7; i >= 0; --i)
             {
-              // https://www.w3schools.com/js/tryit.asp?filename=tryjs_numbers_inaccurate2
-              total = ((total * 10) + (1 * Math.pow(10, -i)) * 10) / 10;
+              if (i === (7 - occurrence))
+              {
+                break;
+              }
+              else
+              {
+                const bitVal = Math.pow(2, i);
+                total += bitVal;
+              }
             }
 
             // Add word relevance value to total item relevance
@@ -126,17 +160,22 @@ class App extends Component
 
   render()
   {
-    const { list } = this.state;
+    const { list, input } = this.state;
 
     return (
       <div className="content">
         <h1 style={{ marginBottom: 10 }}>Star Wars</h1>
         <div>
           <input
+            value={input}
             onChange={this.handleChange}
             placeholder="Type your search here..."
           >
           </input>
+        </div>
+        <div>
+          <font className="suggestion" onClick={() => this.addWord('empire')}>empire</font>
+          <font className="suggestion" onClick={() => this.addWord('powerful')}>powerful</font>
         </div>
         <div><button onClick={this.handleSubmit}>Search</button></div>
         <div>

@@ -18,6 +18,7 @@ export default function Item(props)
             {
                 (counts !== undefined) &&
                 <div style={{ textAlign: 'right', marginTop: 18 }}>
+                    <font className="relevance">Relevance: {props.data.relevance}</font>
                     {
                         display_counts.map((e, i) => (<font key={i} className="count">{e}</font>))
                     }

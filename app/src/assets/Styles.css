@@ -6,6 +6,9 @@ body{
   background-size: cover;
 }
 /* MAIN */
+#root{
+  background-color: #000000b0;
+}
 .content{
   max-width: 600px;
   width: 100%;
@@ -14,7 +17,6 @@ body{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #000000b0;
   padding: 20px;
 }
 .content > div{
@@ -50,9 +52,25 @@ body{
 .count{
   margin-left: 6px;
   padding: 6px 8px;
-  color: #FF9800;
-  background-color: #242424;
+  color: #000000;
+  background-color: #ff9800;
+  border: 0.5px solid #FF9800;
   border-radius: 1px;
+}
+.relevance{
+  background-color: #121212;
+  color: #FF9800;
+  border: 0.5px solid #FF9800;
+  padding: 6px 8px;
+  border-radius: 1px;
+}
+.suggestion{
+  color: #ffffff;
+  margin: 4px;
+}
+.suggestion:hover{
+  cursor: pointer;
+  color: #564ed2;
 }
 /* TAGS */
 input{
