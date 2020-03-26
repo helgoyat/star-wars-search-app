@@ -87,8 +87,6 @@ class App extends Component
         const array = input.split(' ');
         const words = array.slice(0, 4);
 
-        console.log(words);
-
         for (let item in list)
         {
           let relevance = 0;
@@ -104,30 +102,9 @@ class App extends Component
             if (count !== null)
             {
               const occurrence = count.length;
+              const total = this.calculateRelevance(occurrence);
+
               counts[word] = occurrence;
-
-              // Calculate word relevance value
-              let total = 0;
-
-              // Maximum number of occurrence is 8 for a word
-              // let occur = (occurrence > 8) ? 7 : occurrence;
-
-              // 1 byte (8 bits) number calculation
-
-              for (let i = 7; i >= 0; --i)
-              {
-                if (i === (7 - occurrence))
-                {
-                  break;
-                }
-                else
-                {
-                  const bitVal = Math.pow(2, i);
-                  total += bitVal;
-                }
-              }
-
-              // Add word relevance value to total item relevance
               relevance += total;
             }
             else
@@ -148,6 +125,32 @@ class App extends Component
         this.setState({ list: newList });
       }
     });
+  }
+
+  calculateRelevance(occurrence)
+  {
+    // Calculate word relevance value
+    let total = 0;
+
+    // Max occurrence number is 8 for a word
+    // For calculating based on 1 byte (8 bits)
+
+    // let occur = (occurrence > 8) ? 7 : occurrence;
+
+    for (let i = 7; i >= 0; --i)
+    {
+      if (i === (7 - occurrence))
+      {
+        break;
+      }
+      else
+      {
+        const bitVal = Math.pow(2, i);
+        total += bitVal;
+      }
+    }
+
+    return total;
   }
 
   render()
