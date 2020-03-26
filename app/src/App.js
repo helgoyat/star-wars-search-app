@@ -13,6 +13,7 @@ class App extends Component
       list: null,
       input: '',
     }
+    this.validate = this.validate.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -32,6 +33,20 @@ class App extends Component
   }
 
   /**
+   * Check input format
+   */
+  validate()
+  {
+    const { input } = this.state;
+
+    if (input.length > 0)
+    {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Input value change
    * @param {obj} event 
    */
@@ -48,61 +63,65 @@ class App extends Component
   {
     const { input, list } = this.state;
 
+    const isValid = this.validate();
 
-
-    const array = input.split(' ');
-
-    // Set array for lenght max is 9
-    // i.e. 9 words max to search
-    // >>>> Due to operation below for calculating relevance
-    // Maximum occurence value would be 9.99999999...
-    const words = array.slice(0, 10);
-
-    for (let item in list)
+    if (isValid)
     {
-      let relevance = 0;
-      const counts = {};
+      const newList = [...list];
 
-      words.forEach(word =>
+      // Set array for lenght max is 9
+      // i.e. 9 words max to search
+      // >>>> Due to operation below for calculating relevance
+      // Maximum relevance value would be 9.99999999...
+      const array = input.split(' ');
+      const words = array.slice(0, 10);
+
+      for (let item in list)
       {
-        // modifier g for global search
-        // modifier i for case-insensitive
-        const regex = new RegExp(word, 'gi');
-        const count = list[item].opening_crawl.match(regex);
+        let relevance = 0;
+        const counts = {};
 
-        if (count !== null)
+        words.forEach(word =>
         {
-          // Add count (of that word occurence)
-          counts[word] = count.length;
+          // modifier g for global search
+          // modifier i for case-insensitive
+          const regex = new RegExp(word, 'gi');
+          const count = list[item].opening_crawl.match(regex);
 
-          // Calculate relevance value for that word
-          let total = 0;
-          for (let i = 0; i < count.length; ++i)
+          if (count !== null)
           {
-            // https://www.w3schools.com/js/tryit.asp?filename=tryjs_numbers_inaccurate2
-            total = ((total * 10) + (1 * Math.pow(10, -i)) * 10) / 10;
+            // Add count (of that word occurence)
+            counts[word] = count.length;
+
+            // Calculate relevance value for that word
+            let total = 0;
+            for (let i = 0; i < count.length; ++i)
+            {
+              // https://www.w3schools.com/js/tryit.asp?filename=tryjs_numbers_inaccurate2
+              total = ((total * 10) + (1 * Math.pow(10, -i)) * 10) / 10;
+            }
+
+            // Add word relevance value to total item relevance
+            relevance += total;
           }
+          else
+          {
+            counts[word] = 0;
+            relevance += 0;
+          }
+        });
 
-          // Add word relevance value to total item relevance
-          relevance += total;
-        }
-        else
-        {
-          counts[word] = 0;
-          relevance += 0;
-        }
-      });
+        // Add new props to current item object in array
+        newList[item].relevance = relevance;
+        newList[item].counts = counts;
 
-      // Add new props to current item object in array
-      list[item].relevance = relevance;
-      list[item].counts = counts;
+      }
+
+      // Sort by relevance value
+      newList.sort(function (a, b) { return b.relevance - a.relevance });
+      this.setState({ list: newList });
 
     }
-
-    // Sort by relevance value
-    list.sort(function (a, b) { return b.relevance - a.relevance });
-    this.setState({ list });
-
   }
 
   render()
