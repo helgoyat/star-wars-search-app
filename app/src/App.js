@@ -54,7 +54,7 @@ class App extends Component
   addWord(word)
   {
     const { input } = this.state;
-    const newInput = (input.length > 0) ? input + " " + word : word;
+    const newInput = (input.length > 0) ? input.trim() + " " + word : word;
     this.setState({ input: newInput });
   }
 
@@ -167,6 +167,7 @@ class App extends Component
         <div>
           <font className="suggestion" onClick={() => this.addWord('empire')}>empire</font>
           <font className="suggestion" onClick={() => this.addWord('powerful')}>powerful</font>
+          <font className="suggestion" onClick={() => this.addWord('galactic')}>galactic</font>
           <font className="suggestion" onClick={() => this.addWord('mission')}>mission</font>
         </div>
         <div><button onClick={this.handleSubmit}>Search</button></div>
