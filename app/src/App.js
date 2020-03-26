@@ -130,27 +130,23 @@ class App extends Component
   calculateRelevance(occurrence)
   {
     // Calculate word relevance value
-    let total = 0;
-
-    // Max occurrence number is 8 for a word
-    // For calculating based on 1 byte (8 bits)
-
-    // let occur = (occurrence > 8) ? 7 : occurrence;
+    let relevance = 0;
 
     for (let i = 7; i >= 0; --i)
     {
       if (i === (7 - occurrence))
       {
+        // Max occurrence value taken into account is 8 for a word
         break;
       }
       else
       {
         const bitVal = Math.pow(2, i);
-        total += bitVal;
+        relevance += bitVal;
       }
     }
 
-    return total;
+    return relevance;
   }
 
   render()
