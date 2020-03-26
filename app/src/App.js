@@ -11,7 +11,7 @@ class App extends Component
     super();
     this.state = {
       json: null,
-      data: [],
+      list: [],
       input: '',
     }
     this.handleChange = this.handleChange.bind(this);
@@ -20,12 +20,12 @@ class App extends Component
 
   async componentDidMount()
   {
-    // Load samples
+    // Load film samples from Star Wars API
     const res = await fetch('https://swapi.co/api/films/');
     if (res.ok)
     {
       const json = await res.json();
-      this.setState({ json: json.results, data: json.results });
+      this.setState({ json: json.results, list: json.results });
     }
   }
 
@@ -37,7 +37,7 @@ class App extends Component
 
   handleSubmit()
   {
-    const { input, data } = this.state;
+    const { input, list } = this.state;
     const array = input.split(' ');
 
     // Set array for lenght max is 9
@@ -46,7 +46,7 @@ class App extends Component
     // Maximum occurence value would be 9.99999999...
     const words = array.slice(0, 10);
 
-    for (let item in data)
+    for (let item in list)
     {
       let relevance = 0;
       const counts = {};
@@ -56,7 +56,7 @@ class App extends Component
         // modifier g for global search
         // modifier i for case-insensitive
         const regex = new RegExp(word, 'gi');
-        const count = data[item].opening_crawl.match(regex);
+        const count = list[item].opening_crawl.match(regex);
 
         if (count !== null)
         {
@@ -82,37 +82,41 @@ class App extends Component
       });
 
       // Add new props to current item object in array
-      data[item].relevance = relevance;
-      data[item].counts = counts;
+      list[item].relevance = relevance;
+      list[item].counts = counts;
 
     }
 
     // Sort by relevance value
-    data.sort(function (a, b) { return b.relevance - a.relevance });
-    this.setState({ data });
+    list.sort(function (a, b) { return b.relevance - a.relevance });
+    this.setState({ list });
 
   }
 
   render()
   {
-    const { json, data } = this.state;
+    const { json, list } = this.state;
 
     return (
-      <div className="content" >
+      <div className="content">
         <h1 style={{ marginBottom: 10 }}>Star Wars</h1>
-        <div><input onChange={this.handleChange} placeholder="Type your search here..."></input></div>
+        <div>
+          <input
+            onChange={this.handleChange}
+            placeholder="Type your search here..."
+          >
+          </input>
+        </div>
         <div><button onClick={this.handleSubmit}>Search</button></div>
         <div>
           {
             (json !== null) ?
               <React.Fragment>
                 {
-                  (data.length > 0) ?
-                    data.map((e, i) => (<Item key={i} data={e} />)) :
-                    <div className="status">No result...</div>
+                  list.map((e, i) => (<Item key={i} data={e} />))
                 }
               </React.Fragment> :
-              <div className="status">Loading...</div>
+              <div className="status">Fetching data...</div>
           }
         </div>
       </div>
