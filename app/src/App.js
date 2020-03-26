@@ -65,7 +65,7 @@ class App extends Component
   handleChange(event)
   {
     const { value } = event.target;
-    this.setState({ input: value.trim() });
+    this.setState({ input: value });
   }
 
   /**
@@ -73,89 +73,81 @@ class App extends Component
    */
   handleSubmit()
   {
-    const { input, list } = this.state;
-
-    const isValid = this.validate();
-
-    if (isValid)
+    this.setState((prevState) => ({ input: prevState.input.trim() }), () =>
     {
-      const newList = [...list];
+      const { input, list } = this.state;
+      const isValid = this.validate();
 
-      // Set array for lenght max is 9
-      // i.e. 9 words max to search
-      // >>>> Due to operation below for calculating relevance
-      // Maximum relevance value would be 9.99999999...
-      const array = input.split(' ');
-      const words = array.slice(0, 10);
-
-      for (let item in list)
+      if (isValid)
       {
-        let relevance = 0;
-        const counts = {};
+        const newList = [...list];
 
-        words.forEach(word =>
+        // Set array with max length of 4
+        // i.e. 4 words max to search
+        const array = input.split(' ');
+        const words = array.slice(0, 4);
+
+        console.log(words);
+
+        for (let item in list)
         {
-          // modifier g for global search
-          // modifier i for case-insensitive
-          const regex = new RegExp(word, 'gi');
-          const count = list[item].opening_crawl.match(regex);
+          let relevance = 0;
+          const counts = {};
 
-          if (count !== null)
+          words.forEach(word =>
           {
-            const occurrence = count.length;
-            counts[word] = occurrence;
+            // modifier g for global search
+            // modifier i for case-insensitive
+            const regex = new RegExp(word, 'gi');
+            const count = list[item].opening_crawl.match(regex);
 
-            // Calculate word relevance value
-
-            // PREVIOUS METHOD
-            // let total = 0;
-            // for (let i = 0; i < occurrence; ++i)
-            // {
-            //   // https://www.w3schools.com/js/tryit.asp?filename=tryjs_numbers_inaccurate2
-            //   total += (1 * Math.pow(10, -i) * 10) / 10;
-            // }
-
-            let total = 0;
-
-            // Maximum number of occurrence is 8 for a word
-            // let occur = (occurrence > 8) ? 7 : occurrence;
-
-            // 1 byte (8 bits) number calculation
-
-            for (let i = 7; i >= 0; --i)
+            if (count !== null)
             {
-              if (i === (7 - occurrence))
+              const occurrence = count.length;
+              counts[word] = occurrence;
+
+              // Calculate word relevance value
+              let total = 0;
+
+              // Maximum number of occurrence is 8 for a word
+              // let occur = (occurrence > 8) ? 7 : occurrence;
+
+              // 1 byte (8 bits) number calculation
+
+              for (let i = 7; i >= 0; --i)
               {
-                break;
+                if (i === (7 - occurrence))
+                {
+                  break;
+                }
+                else
+                {
+                  const bitVal = Math.pow(2, i);
+                  total += bitVal;
+                }
               }
-              else
-              {
-                const bitVal = Math.pow(2, i);
-                total += bitVal;
-              }
+
+              // Add word relevance value to total item relevance
+              relevance += total;
             }
+            else
+            {
+              counts[word] = 0;
+              relevance += 0;
+            }
+          });
 
-            // Add word relevance value to total item relevance
-            relevance += total;
-          }
-          else
-          {
-            counts[word] = 0;
-            relevance += 0;
-          }
-        });
+          // Add new props to item
+          newList[item].relevance = relevance;
+          newList[item].counts = counts;
+        }
 
-        // Add new props to current item object in array
-        newList[item].relevance = relevance;
-        newList[item].counts = counts;
+        // Sort by relevance
+        newList.sort(function (a, b) { return b.relevance - a.relevance });
 
+        this.setState({ list: newList });
       }
-
-      // Sort by relevance value
-      newList.sort(function (a, b) { return b.relevance - a.relevance });
-      this.setState({ list: newList });
-
-    }
+    });
   }
 
   render()
@@ -176,6 +168,7 @@ class App extends Component
         <div>
           <font className="suggestion" onClick={() => this.addWord('empire')}>empire</font>
           <font className="suggestion" onClick={() => this.addWord('powerful')}>powerful</font>
+          <font className="suggestion" onClick={() => this.addWord('mission')}>mission</font>
         </div>
         <div><button onClick={this.handleSubmit}>Search</button></div>
         <div>
