@@ -15,7 +15,7 @@ Using the concept of binary numbers, each **S.W. film item relevancy is calculat
 
 To determine each **keyword relevancy** of an item, a method will receive the occurence value of the given keyword in a film item as parameter and return a 1 byte (8 bits) number.
 
-###### Example
+* Example
 
 If the keyword 'mission' appears 2 times in an item, its relevance value will be:
 
@@ -31,13 +31,13 @@ Decimal: 248
 
 And so on...
 
-###### Note
+* Note
 
 That chosen calculation method makes that for two given keywords if both appear at least once, the film item **relevance will be higher** than for another film item where one keyword appears a lot of times but the other zero times.
 
 ## Screenshots
 
-Below are some screenshots of the interface
+Below are some screenshots of the interface:
 
 ![Screenshot_1](https://github.com/helgoyat/search-app/blob/master/screenshots/capture1.png)
 
